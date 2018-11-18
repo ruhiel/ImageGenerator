@@ -11,27 +11,31 @@ $(function(){
   var $textVertical = $('#text-vertical');
   var $file = $('#file-selection');
   var fontFamily = 'ＭＳ ゴシック';
-  var fontSize = 30;
+  var $fontSize = $('#font-size');
   var fileInfoMap = {
     'DgXByGgVAAIzdkf.png':{
       leftRate:0.1,
       topRate:0.4,
-      textVertical : false
+      textVertical : false,
+      fontSize:30
     },
     'Dl1uV-YUwAA5kOr.png':{
       leftRate:0.55,
-      topRate:0.65,
-      textVertical : false
+      topRate:0.60,
+      textVertical : false,
+      fontSize:90
     },
     'Dk4Po8eU0AIakS6.png':{
       leftRate:0.14,
       topRate:0.23,
-      textVertical : false
+      textVertical : false,
+      fontSize:30
     },
     'DrzXCYhV4AAZXAa.png':{
       leftRate:0.1,
       topRate:0.2,
-      textVertical : true
+      textVertical : true,
+      fontSize:40
     }
   };
 
@@ -50,6 +54,7 @@ $(function(){
     $text.val($('#file-selection option:selected').text());
     var map = fileInfoMap[$file.val()];
     $textVertical.prop('checked', map.textVertical);
+    $fontSize.val(map.fontSize);
     setImage($file.val());
   });
 
@@ -95,7 +100,7 @@ $(function(){
    * フォント文字列取得
    */
   var getFontString = function() {
-    return fontSize + 'px ' + fontFamily; 
+    return $fontSize.val() + 'px ' + fontFamily; 
   };
 
   var getTextWidth = function(text) {
@@ -130,7 +135,7 @@ $(function(){
         left: posX,
         top: posY,
         fontFamily : fontFamily,
-        fontSize : fontSize,
+        fontSize : $fontSize.val(),
         fill : getFontColor()
       });
       textList.push(newText);
@@ -247,6 +252,6 @@ $(function(){
     var b = parseInt(value.substr(5, 2), 16);
     return 'rgb(' + r + ',' + g + ',' + b + ')';
   };
-  
+
   setImage($file.children().first().attr('value'));
 });
