@@ -14,7 +14,7 @@ html, body{
   }
 
   .text-area {
-    width : 640px;
+    width : 300px;
   }
   
   .canvas-wrapper {
@@ -30,4 +30,26 @@ html, body{
     border-top: solid 1px #eaeaea;
     border-bottom: solid 1px #eaeaea;
     background-color: #fafafa;
+  }
+  .grid {
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: 2fr 1fr;
+  }
+  .main {
+    background: #fcc;
+  }
+  .side {
+    background: #fea;
+  }
+  .main,
+  .side {
+    padding: 2%;
+    border-radius: 10px
+  }
+  
+  @media(max-width: 400px){
+    .grid {
+      grid-template-columns: 1fr;
+    }
   }
