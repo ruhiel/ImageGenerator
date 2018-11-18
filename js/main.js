@@ -10,7 +10,7 @@ $(function(){
   var textGroups = [];
   var $textVertical = $('#text-vertical');
   var $file = $('#file-selection');
-  var fontFamily = 'ＭＳ ゴシック';
+  var $fontFamily = $('#font-selection');
   var $fontSize = $('#font-size');
   var fileInfoMap = {
     'DgXByGgVAAIzdkf.png':{
@@ -100,7 +100,7 @@ $(function(){
    * フォント文字列取得
    */
   var getFontString = function() {
-    return $fontSize.val() + 'px ' + fontFamily; 
+    return $fontSize.val() + 'px ' + $('#font-selection option:selected').val(); 
   };
 
   var getTextWidth = function(text) {
@@ -134,7 +134,7 @@ $(function(){
       newText.set({
         left: posX,
         top: posY,
-        fontFamily : fontFamily,
+        fontFamily : $('#font-selection option:selected').val(),
         fontSize : $fontSize.val(),
         fill : getFontColor()
       });
