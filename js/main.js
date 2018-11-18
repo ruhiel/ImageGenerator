@@ -14,10 +14,10 @@ $(function(){
   var $fontSize = $('#font-size');
   var fileInfoMap = {
     'DgXByGgVAAIzdkf.png':{
-      leftRate:0.1,
+      leftRate:0.05,
       topRate:0.4,
       textVertical : false,
-      fontSize:30
+      fontSize:50
     },
     'Dl1uV-YUwAA5kOr.png':{
       leftRate:0.55,
