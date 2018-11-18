@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>白上式画像ジェネレーター</title>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <script src="./js/fabric.min.js"></script>
+  <script src="./js/main.js"></script>
+
+  <link href="./css/main.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+  <header>
+    <h1>白上式画像ジェネレーター</h1>
+  </header>
+
+  <div class="section">
+    <select id="file-selection">
+        <option value="DgXByGgVAAIzdkf.png" selected>狐じゃい</option>
+        <option value="Dl1uV-YUwAA5kOr.png">茶葉</option>
+        <option value="Dk4Po8eU0AIakS6.png">ヨシ</option>
+        <option value="DrzXCYhV4AAZXAa.png">素人は黙っとれ</option>
+    </select>
+  </div>
+
+  <div class="section">
+    <textarea id="text">狐じゃい</textarea>
+  </div>
+  <div class="section">
+    <button id="text-add">追加</button>
+    <button id="text-all-remove">全削除</button>
+  </div>
+  <div class="section">
+    文字色：<input type="color" value="#ffffff" id="fill-color"><br/>
+    縦書き：<input type="checkbox" id="text-vertical"/>
+  </div>
+  <!--
+  <div class="section">
+    <select id="font-families">
+      <option value="arial">arial</option>
+      <option value="Century">Century Gothic</option>
+      <option value="Gulim">Gulim</option>
+      <option value="Dotum">Dotum</option>
+      <option value="Impact" selected>Impact</option>
+      <option value="Verdana">Verdana</option>
+      <option value="serif">serif</option>
+      <option value="Batang">Batang</option>
+      <option value="Roman">Roman</option>
+      <option value="Times New Roman">Times New Roman</option>
+      <option value="Tunga">Tunga</option>
+      <option value="monospace">monospace</option>
+    </select>
+    <input type="text" id="font-family" value="Impact">
+  </div>
+
+  <div class="section">
+    <label for="bold"><input type="checkbox" id="bold"> <b>bold</b></label>
+    <label for="italic"><input type="checkbox" id="italic"> <i>italic</i></label>
+  </div>
+  -->
+  <div class="section">
+      <button id="download_button">Download</button>
+  </div>
+
+  <div class="section">
+    <div class="canvas-wrapper">
+      <canvas id="canvas"></canvas>
+    </div>
+  </div>
+
+  <footer>
+    <a href="http://fabricjs.com/" target="_blank">Fabric.js</a>
+  </footer>
+</body>
+</html>
