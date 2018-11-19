@@ -6,12 +6,14 @@ $(function(){
   var $text = $('#text');
   var $fillColor=  $('#fill-color');
   var $addTextButton = $('#text-add');
-  var $removeTextButton = $('#text-all-remove');
+  var $removeTextButton = $('#text-remove');
+  var $removeAllTextButton = $('#text-all-remove');
   var textGroups = [];
   var $textVertical = $('#text-vertical');
   var $file = $('#file-selection');
   var $fontFamily = $('#font-selection');
   var $fontSize = $('#font-size');
+  var selectedObject = null;
   var fileInfoMap = {
     'DgXByGgVAAIzdkf.png':{
       leftRate:0.05,
@@ -39,11 +41,35 @@ $(function(){
     }
   };
 
+  /**
+   * 追加ボタンクリックイベント
+   */
   $addTextButton.on('click', function(){
     addText(0, 0);
   });
 
+  /**
+   * 削除ボタンクリックイベント
+   */
   $removeTextButton.on('click', function(){
+    if(selectedObject == null) return;
+    
+    for(var i = 0; i < textGroups.length; i++) {
+      if(textGroups[i] == selectedObject) {
+        canvas.remove(selectedObject);
+        canvas.renderAll();
+        textGroups.splice(i,1);
+        alert(textGroups.length)
+        return;
+      }
+    }
+
+  });
+
+  /**
+   * 全削除クリックイベント
+   */
+  $removeAllTextButton.on('click', function(){
     removeAllText();
   });
 
@@ -71,6 +97,9 @@ $(function(){
     canvas.renderAll();
   });
   */
+  /**
+   * 文字色取得
+   */
   var getFontColor = function() {
     return colorCodeToRGBString($fillColor.val());
   };
@@ -103,6 +132,10 @@ $(function(){
     return $fontSize.val() + 'px ' + $('#font-selection option:selected').val(); 
   };
 
+  /**
+   * 文字列幅取得
+   * @param {*} text 文字列
+   */
   var getTextWidth = function(text) {
     var ctx = document.getElementById("canvas");
     var context = ctx.getContext("2d") ;
@@ -124,6 +157,13 @@ $(function(){
     textGroups = [];
   };
 
+  /**
+   * 文字作成
+   * @param {*} text 文字
+   * @param {*} initPosX 初期位置X
+   * @param {*} initPosY 初期位置Y
+   * @param {*} isVertical 縦書きフラグ
+   */
   var createText = function(text, initPosX, initPosY, isVertical) {
     var posX = initPosX;
     var posY = initPosY;
@@ -159,10 +199,19 @@ $(function(){
     textGroups.push(group);
   };
 
+  /**
+   * 文字列追加
+   * @param {*} x 
+   * @param {*} y 
+   */
   var addText = function(x, y) {
     createText($text.val(), x, y, $textVertical.prop('checked'));
   };
 
+  /**
+   * 画像設定
+   * @param {*} file 
+   */
   var setImage = function(file){
     if(!file) { return; }
 
@@ -193,7 +242,11 @@ $(function(){
     canvas.add(lgtmText);
   };
 
-  // canvas上のイメージを保存
+  /**
+   * canvas上のイメージを保存
+   * @param {*} saveType 
+   * @param {*} fileName 
+   */
   var saveCanvas = function(saveType, fileName){
     var imageType = "image/png";
     if(saveType === "jpeg"){
@@ -208,7 +261,10 @@ $(function(){
     saveBlob(blob, fileName);
   };
 
-  // Base64データをBlobデータに変換
+  /**
+   * Base64データをBlobデータに変換
+   * @param {*} base64 
+   */
   var Base64toBlob = function(base64){
     // カンマで分割して以下のようにデータを分ける
     // tmp[0] : データ形式（data:image/png;base64）
@@ -228,7 +284,11 @@ $(function(){
     return blob;
   };
 
-  // 画像のダウンロード
+  /**
+   * 画像のダウンロード
+   * @param {*} blob 
+   * @param {*} fileName 
+   */
   var saveBlob = function(blob, fileName){
     var url = (window.URL || window.webkitURL);
     // ダウンロード用のURL作成
@@ -246,12 +306,30 @@ $(function(){
     a.dispatchEvent(event);
   };
 
+  /**
+   * カラーコードRGB変換
+   * @param {*} value 
+   */
   var colorCodeToRGBString = function(value) {
     var r = parseInt(value.substr(1, 2), 16);
     var g = parseInt(value.substr(3, 2), 16);
     var b = parseInt(value.substr(5, 2), 16);
     return 'rgb(' + r + ',' + g + ',' + b + ')';
   };
+
+  /**
+   * オブジェクト選択イベント
+   */
+  canvas.on('selection:created', function(options){
+    selectedObject = options.target;
+  });
+
+  /**
+   * オブジェクト選択解除イベント
+   */
+  canvas.on('selection:cleared', function(options){
+    selectedObject = null;
+  });
 
   setImage($file.children().first().attr('value'));
 });
