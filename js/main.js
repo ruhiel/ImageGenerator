@@ -4,16 +4,14 @@ $(function(){
   var canvas = new fabric.Canvas('canvas');
   var $download = $('#download_button');
   var $text = $('#text');
-  var $fillColor=  $('#fill-color');
+  var $fillColor =  $('#fill-color');
   var $addTextButton = $('#text-add');
   var $removeTextButton = $('#text-remove');
   var $removeAllTextButton = $('#text-all-remove');
-  var textGroups = [];
   var $textVertical = $('#text-vertical');
   var $file = $('#file-selection');
   var $fontFamily = $('#font-selection');
   var $fontSize = $('#font-size');
-  var selectedObject = null;
   var fileInfoMap = {
     'DgXByGgVAAIzdkf.png':{
       leftRate:0.05,
@@ -52,17 +50,13 @@ $(function(){
    * 削除ボタンクリックイベント
    */
   $removeTextButton.on('click', function(){
-    if(selectedObject == null) return;
-    
-    for(var i = 0; i < textGroups.length; i++) {
-      if(textGroups[i] == selectedObject) {
-        canvas.remove(selectedObject);
-        canvas.renderAll();
-        textGroups.splice(i,1);
-        alert(textGroups.length)
-        return;
+   
+    var objects = canvas.getActiveObjects();
+    for(var i = 0; i < objects.length; i++) {
+        canvas.remove(objects[i]);
       }
-    }
+    
+    canvas.renderAll();
 
   });
 
@@ -108,10 +102,13 @@ $(function(){
    * 文字色変更
    */
   $fillColor.on('change', function(){
-    for(var i = 0; i < textGroups.length; i++) {
-      var g = textGroups[i];
-      for(var j = 0; j < g.size(); j++) {
-        g.item(j).setColor(getFontColor());
+    var array = canvas.getObjects();
+    for(var i = 0; i < array.length; i++){
+      if(array[i] instanceof fabric.Group) {
+        var g = array[i];
+        for(var j = 0; j < g.size(); j++) {
+          g.item(j).setColor(getFontColor());
+        }
       }
     }
     canvas.renderAll();
@@ -150,11 +147,13 @@ $(function(){
    * 文字全削除
    */
   var removeAllText = function() {
-    for(var i = 0; i < textGroups.length; i++) {
-      canvas.remove(textGroups[i]);
+    var array = canvas.getObjects();
+    for(var i = 0; i < array.length; i++){
+      if(array[i] instanceof fabric.Group) {
+        canvas.remove(array[i]);
+      }
     }
-
-    textGroups = [];
+    canvas.renderAll();
   };
 
   /**
@@ -195,8 +194,6 @@ $(function(){
     });
 
     canvas.add(group);
-
-    textGroups.push(group);
   };
 
   /**
