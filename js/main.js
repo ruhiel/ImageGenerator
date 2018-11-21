@@ -12,6 +12,7 @@ $(function(){
   var $file = $('#file-selection');
   var $fontFamily = $('#font-selection');
   var $fontSize = $('#font-size');
+  var $addFukidashi = $('#add_fukidashi');
   var fileInfoMap = {
     'DgXByGgVAAIzdkf.png':{
       leftRate:0.05,
@@ -97,7 +98,7 @@ $(function(){
    * 文字色変更
    */
   $fillColor.on('change', function(){
-    var array = canvas.getObjects();
+    var array = canvas.getActiveObjects();
     for(var i = 0; i < array.length; i++){
       if(array[i] instanceof fabric.Group) {
         var g = array[i];
@@ -116,6 +117,16 @@ $(function(){
     canvas.discardActiveObject();
     canvas.renderAll();
   };
+
+  /**
+   * 
+   */
+  $addFukidashi.on('click', function(){
+    addImage('fukidashi/fukidashi_ogdo-01.png', {
+      scaleX : 0.3,
+      scaleY : 0.3
+    });
+  });
 
   /**
    * フォント文字列取得
@@ -209,6 +220,14 @@ $(function(){
     createText($text.val(), x, y, $textVertical.prop('checked'));
   };
 
+  var addImage = function(file, opt) {
+    if(!file) { return; }
+
+    fabric.Image.fromURL('img/' + file, function(img) {
+      img.set(opt);
+      canvas.add(img);
+    });
+  };
   /**
    * 画像設定
    * @param {*} file 
