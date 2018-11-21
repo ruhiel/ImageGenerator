@@ -86,11 +86,6 @@ $(function(){
     saveCanvas('png', $file.val());
   });
 
-  /*
-  $text.on('change', function(){
-    canvas.renderAll();
-  });
-  */
   /**
    * 文字色取得
    */
@@ -175,8 +170,10 @@ $(function(){
         top: posY,
         fontFamily : $('#font-selection option:selected').val(),
         fontSize : $fontSize.val(),
-        fill : getFontColor()
+        fill : getFontColor(),
       });
+      
+
       textList.push(newText);
       if(isVertical) {
         // 縦書き
@@ -186,6 +183,13 @@ $(function(){
         posX += getTextWidth(array[i]);
       }
       
+      if(isVertical && array[i].match(/[\u30FC\u2010-\u2015\u2212\uFF70-]/)){
+        // 縦棒を縦書きにするための小細工
+        newText.set({
+          angle: 90,
+          left: posX + getTextWidth(array[i])
+        });
+      }
     }
 
     var group = new fabric.Group(textList, {
