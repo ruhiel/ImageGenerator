@@ -12,6 +12,7 @@ $(function(){
   var $file = $('#file-selection');
   var $fontFamily = $('#font-selection');
   var $fontSize = $('#font-size');
+  var $reverse = $('#image-reverse');
   var fileInfoMap = {
     'DgXByGgVAAIzdkf.png':{
       leftRate:0.05,
@@ -106,6 +107,14 @@ $(function(){
         }
       }
     }
+    canvas.renderAll();
+  });
+
+  /**
+   * 画像左右反転
+   */
+  $reverse.on('click', function(){
+    canvas.item(0).set({flipX:!canvas.item(0).get('flipX')});
     canvas.renderAll();
   });
 
@@ -226,7 +235,7 @@ $(function(){
       img.set({
         selectable: false,
         scaleX : scaleX,
-        scaleY : scaleY
+        scaleY : scaleY,
       });
 
       canvas.setWidth(width);
