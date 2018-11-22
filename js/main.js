@@ -332,5 +332,10 @@ $(function(){
     selectedObject = null;
   });
 
+  // 初期化
+  $file.val($file.children().first().attr('value'));
+  $text.val($file.children().first().text());
+  $textVertical.prop('checked', false);
+  $fontSize.val(fileInfoMap[$file.children().first().attr('value')].fontSize);
   setImage($file.children().first().attr('value'));
 });
