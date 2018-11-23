@@ -13,6 +13,7 @@ $(function(){
   var $fontFamily = $('#font-selection');
   var $fontSize = $('#font-size');
   var $addFukidashi = $('#add_fukidashi');
+  var $selectFukidashi = $('select[name=fukidashi]');
   var fileInfoMap = {
     'DgXByGgVAAIzdkf.png':{
       leftRate:0.05,
@@ -119,10 +120,10 @@ $(function(){
   };
 
   /**
-   * 
+   * セリフ枠追加
    */
   $addFukidashi.on('click', function(){
-    addImage('fukidashi/fukidashi_ogdo-01.png', {
+    addImage($selectFukidashi.val(), {
       scaleX : 0.3,
       scaleY : 0.3
     });
@@ -350,6 +351,6 @@ $(function(){
   canvas.on('selection:cleared', function(options){
     selectedObject = null;
   });
-
+  $('select[name=fukidashi]').ImageSelect({dropdownWidth:425});
   setImage($file.children().first().attr('value'));
 });
