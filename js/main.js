@@ -13,6 +13,8 @@ $(function(){
   var $fontFamily = $('#font-selection');
   var $fontSize = $('#font-size');
   var $reverse = $('#image-reverse');
+  var $addFukidashi = $('#add_fukidashi');
+  var $selectFukidashi = $('select[name=fukidashi]');
   var fileInfoMap = {
     'DgXByGgVAAIzdkf.png':{
       leftRate:0.05,
@@ -98,7 +100,7 @@ $(function(){
    * 文字色変更
    */
   $fillColor.on('change', function(){
-    var array = canvas.getObjects();
+    var array = canvas.getActiveObjects();
     for(var i = 0; i < array.length; i++){
       if(array[i] instanceof fabric.Group) {
         var g = array[i];
@@ -125,6 +127,16 @@ $(function(){
     canvas.discardActiveObject();
     canvas.renderAll();
   };
+
+  /**
+   * セリフ枠追加
+   */
+  $addFukidashi.on('click', function(){
+    addImage($selectFukidashi.val(), {
+      scaleX : 0.3,
+      scaleY : 0.3
+    });
+  });
 
   /**
    * フォント文字列取得
@@ -218,6 +230,14 @@ $(function(){
     createText($text.val(), x, y, $textVertical.prop('checked'));
   };
 
+  var addImage = function(file, opt) {
+    if(!file) { return; }
+
+    fabric.Image.fromURL('img/' + file, function(img) {
+      img.set(opt);
+      canvas.add(img);
+    });
+  };
   /**
    * 画像設定
    * @param {*} file 
@@ -346,5 +366,6 @@ $(function(){
   $text.val($file.children().first().text());
   $textVertical.prop('checked', false);
   $fontSize.val(fileInfoMap[$file.children().first().attr('value')].fontSize);
+  $('select[name=fukidashi]').ImageSelect({dropdownWidth:425});
   setImage($file.children().first().attr('value'));
 });
