@@ -48,6 +48,15 @@ html, body{
     border-radius: 10px
   }
   
+  .grid-table {
+    display: grid;
+    grid-template-columns: 200px 3fr;
+    grid-template-rows: repeat(auto-fill, auto);
+  }
+  .grid-table>.row{
+    display: contents;
+  }
+
   @media(max-width: 400px){
     .grid {
       grid-template-columns: 1fr;

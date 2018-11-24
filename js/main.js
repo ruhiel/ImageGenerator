@@ -135,8 +135,8 @@ $(function(){
         fabricImage.set({
           left: 0,
           top: 0,
-          scaleX:  0.1,
-          scaleY:  0.1,
+          scaleX:  0.3,
+          scaleY:  0.3,
         });
         // 画像をcanvasに追加（描画）する
         canvas.add(fabricImage);
