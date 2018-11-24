@@ -15,6 +15,7 @@ $(function(){
   var $reverse = $('#image-reverse');
   var $addFukidashi = $('#add_fukidashi');
   var $selectFukidashi = $('select[name=fukidashi]');
+  var $addOptionalImage = $('#add-optional-image');
   var fileInfoMap = {
     'DgXByGgVAAIzdkf.png':{
       leftRate:0.05,
@@ -117,6 +118,32 @@ $(function(){
    */
   $reverse.on('click', function(){
     canvas.item(0).set({flipX:!canvas.item(0).get('flipX')});
+    canvas.renderAll();
+  });
+
+  /**
+   * 画像追加ボタン
+   */
+  $addOptionalImage.on('change', function(e){
+
+    var imageReader = new FileReader;
+    imageReader.onload = function(e){
+      var image = new Image;
+      image.onload = function(){
+        var fabricImage = new fabric.Image(image);
+        // Fabric.jsのImageオブジェクトを作成
+        fabricImage.set({
+          left: 0,
+          top: 0,
+          scaleX:  0.1,
+          scaleY:  0.1,
+        });
+        // 画像をcanvasに追加（描画）する
+        canvas.add(fabricImage);
+      };
+      image.src = e.target.result;
+    };
+    imageReader.readAsDataURL(e.target.files[0]);
     canvas.renderAll();
   });
 
