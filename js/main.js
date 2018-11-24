@@ -16,6 +16,7 @@ $(function(){
   var $addFukidashi = $('#add_fukidashi');
   var $selectFukidashi = $('select[name=fukidashi]');
   var $addOptionalImage = $('#add-optional-image');
+  var $selectable = $('#selectable');
   var fileInfoMap = {
     'DgXByGgVAAIzdkf.png':{
       leftRate:0.05,
@@ -118,6 +119,14 @@ $(function(){
    */
   $reverse.on('click', function(){
     canvas.item(0).set({flipX:!canvas.item(0).get('flipX')});
+    canvas.renderAll();
+  });
+
+  /**
+   * ベース画像非選択化
+   */
+  $selectable.on('change', function(){
+    canvas.item(0).set('selectable',!$selectable.prop('checked'));
     canvas.renderAll();
   });
 
@@ -280,24 +289,27 @@ $(function(){
       var scaleX = width / img.width;
       var scaleY = height / img.height;
       img.set({
-        selectable: false,
+        selectable : !$selectable.prop('checked'),
         scaleX : scaleX,
         scaleY : scaleY,
       });
-
       canvas.setWidth(width);
       canvas.setHeight(height);
 
       canvas.clear()
       canvas.add(img);
+      img.on('moving', function(){
+        img.set({opacity:0.5});
+      });
+      img.on('moved', function(){
+        img.set({opacity:1.0});
+      });
       var pos = fileInfoMap[file];
       addText(width * pos.leftRate, height * pos.topRate);
     });
-
-    canvas.clear()
-    canvas.add(fabricImage);
-    canvas.add(lgtmText);
   };
+
+
 
   /**
    * canvas上のイメージを保存
