@@ -30,8 +30,8 @@ $(function(){
       fontSize:90
     },
     'Dk4Po8eU0AIakS6.png':{
-      leftRate:0.14,
-      topRate:0.23,
+      leftRate:0.16,
+      topRate:0.24,
       textVertical : false,
       fontSize:30
     },
