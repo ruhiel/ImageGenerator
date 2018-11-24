@@ -6,71 +6,108 @@
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
   <script src="./js/fabric.min.js"></script>
+  <script src="./js/imageselect.js"></script>
   <script src="./js/main.js"></script>
 
+  <link href="./css/imageselect.css" rel="stylesheet" type="text/css">
   <link href="./css/main.css" rel="stylesheet" type="text/css">
 </head>
 <body>
   <header>
     <h1>白上式画像ジェネレーター</h1>
   </header>
-
-  <div class="section">
-    <select id="file-selection">
-        <option value="DgXByGgVAAIzdkf.png" selected>狐じゃい</option>
-        <option value="Dl1uV-YUwAA5kOr.png">茶葉</option>
-        <option value="Dk4Po8eU0AIakS6.png">ヨシ</option>
-        <option value="DrzXCYhV4AAZXAa.png">素人は黙っとれ</option>
-    </select>
+  <div class="grid">
+      <article class="main">
+          <div class="section">
+              <div class="canvas-wrapper">
+                <canvas id="canvas"></canvas>
+              </div>
+          </div>
+      </article>
+      <section class="side">
+          <div class="section">
+              <select id="file-selection">
+                  <option value="DgXByGgVAAIzdkf.png" selected>狐じゃい</option>
+                  <option value="Dl1uV-YUwAA5kOr.png">茶葉</option>
+                  <option value="Dk4Po8eU0AIakS6.png">ヨシ</option>
+                  <option value="DrzXCYhV4AAZXAa.png">素人は黙っとれ――</option>
+              </select>
+          </div>
+          <div class="section">
+              <input type="text" id="text" class="text-area" value="">
+          </div>
+          <div class="section">
+            <button id="text-add">追加</button>
+            <button id="text-remove">削除</button>
+            <button id="text-all-remove">全削除</button>
+          </div>
+          <div class="section">
+            文字色：<input type="color" value="#000000" id="fill-color"><br/>
+            縦書き：<input type="checkbox" id="text-vertical"/><br/>
+            フォント：
+            <select id="font-selection">
+              <option value="メイリオ" selected>メイリオ</option>
+              <option value="Meiryo UI">Meiryo UI</option>
+              <option value="游ゴシック">游ゴシック</option>
+              <option value="游明朝">游明朝</option>
+              <option value="MS UI Gothic">MS UI Gothic</option>
+              <option value="ＭＳ Ｐゴシック">ＭＳ Ｐゴシック</option>
+              <option value="ＭＳ ゴシック">ＭＳ ゴシック</option>
+              <option value="ＭＳ Ｐ明朝">ＭＳ Ｐ明朝</option>
+              <option value="ＭＳ 明朝">ＭＳ 明朝</option>
+              <option value="ヒラギノ角ゴシック">ヒラギノ角ゴシック</option>
+              <option value="ヒラギノ明朝 ProN">ヒラギノ明朝 ProN</option>
+              <option value="游ゴシック体">游ゴシック体"</option>
+              <option value="游明朝体">游明朝体</option>
+              <option value="YuMincho +36p Kana">YuMincho +36p Kana</option>
+              <option value="Klee">Klee</option>
+              <option value="筑紫A丸ゴシック">筑紫A丸ゴシック</option>
+              <option value="Osaka">Osaka</option>
+            </select><br/>
+            デフォルトフォントサイズ：<input class="input-number" type="number" id="font-size" value="50"/><br/>
+            <button id="image-reverse">画像左右反転</button>
+          </div>
+          <div class="section">
+            <select name="fukidashi" id="fukidashi-select">
+              <option value="fukidashi/fukidashi_ogdo-01.png">img/fukidashi/fukidashi_ogdo-01.png</option>
+              <option value="fukidashi/fukidashi_ogdo-02.png">img/fukidashi/fukidashi_ogdo-02.png</option>
+              <option value="fukidashi/fukidashi_ogdo-03.png">img/fukidashi/fukidashi_ogdo-03.png</option>
+              <option value="fukidashi/fukidashi_ogdo-04.png">img/fukidashi/fukidashi_ogdo-04.png</option>
+              <option value="fukidashi/fukidashi_ogdo-05.png">img/fukidashi/fukidashi_ogdo-05.png</option>
+              <option value="fukidashi/fukidashi_ogdo-06.png">img/fukidashi/fukidashi_ogdo-06.png</option>
+              <option value="fukidashi/fukidashi_ogdo-07.png">img/fukidashi/fukidashi_ogdo-07.png</option>
+              <option value="fukidashi/fukidashi_ogdo-08.png">img/fukidashi/fukidashi_ogdo-08.png</option>
+              <option value="fukidashi/fukidashi_ogdo-09.png">img/fukidashi/fukidashi_ogdo-09.png</option>
+              <option value="fukidashi/fukidashi_ogdo-10.png">img/fukidashi/fukidashi_ogdo-10.png</option>
+              <option value="fukidashi/fukidashi_ogdo-11.png">img/fukidashi/fukidashi_ogdo-11.png</option>
+              <option value="fukidashi/fukidashi_ogdo-12.png">img/fukidashi/fukidashi_ogdo-12.png</option>
+              <option value="fukidashi/fukidashi_ogdo-13.png">img/fukidashi/fukidashi_ogdo-13.png</option>
+              <option value="fukidashi/fukidashi_ogdo-14.png">img/fukidashi/fukidashi_ogdo-14.png</option>
+              <option value="fukidashi/fukidashi_ogdo-15.png">img/fukidashi/fukidashi_ogdo-15.png</option>
+              <option value="fukidashi/fukidashi_ogdo-16.png">img/fukidashi/fukidashi_ogdo-16.png</option>
+              <option value="fukidashi/fukidashi_ogdo-17.png">img/fukidashi/fukidashi_ogdo-17.png</option>
+              <option value="fukidashi/fukidashi_ogdo-18.png">img/fukidashi/fukidashi_ogdo-18.png</option>
+              <option value="fukidashi/fukidashi_ogdo-19.png">img/fukidashi/fukidashi_ogdo-19.png</option>
+              <option value="fukidashi/fukidashi_ogdo-20.png">img/fukidashi/fukidashi_ogdo-20.png</option>
+            </select><br/>
+            <button id="add_fukidashi">台詞枠追加</button>
+          </div>
+          <div class="section">
+            画像追加：<input type="file" id="add-optional-image"/><br/>
+          </div>
+          <div class="section">
+              <button id="download_button">画像ダウンロード</button>
+          </div>
+      </section>
   </div>
-
-  <div class="section">
-    <textarea id="text">狐じゃい</textarea>
-  </div>
-  <div class="section">
-    <button id="text-add">追加</button>
-    <button id="text-all-remove">全削除</button>
-  </div>
-  <div class="section">
-    文字色：<input type="color" value="#ffffff" id="fill-color"><br/>
-    縦書き：<input type="checkbox" id="text-vertical"/>
-  </div>
-  <!--
-  <div class="section">
-    <select id="font-families">
-      <option value="arial">arial</option>
-      <option value="Century">Century Gothic</option>
-      <option value="Gulim">Gulim</option>
-      <option value="Dotum">Dotum</option>
-      <option value="Impact" selected>Impact</option>
-      <option value="Verdana">Verdana</option>
-      <option value="serif">serif</option>
-      <option value="Batang">Batang</option>
-      <option value="Roman">Roman</option>
-      <option value="Times New Roman">Times New Roman</option>
-      <option value="Tunga">Tunga</option>
-      <option value="monospace">monospace</option>
-    </select>
-    <input type="text" id="font-family" value="Impact">
-  </div>
-
-  <div class="section">
-    <label for="bold"><input type="checkbox" id="bold"> <b>bold</b></label>
-    <label for="italic"><input type="checkbox" id="italic"> <i>italic</i></label>
-  </div>
-  -->
-  <div class="section">
-      <button id="download_button">Download</button>
-  </div>
-
-  <div class="section">
-    <div class="canvas-wrapper">
-      <canvas id="canvas"></canvas>
-    </div>
-  </div>
-
   <footer>
-    <a href="http://fabricjs.com/" target="_blank">Fabric.js</a>
+      <div class="grid-table">
+          <div class="row"><div>読んでから使おう→</div><div><a href="https://www.hololive.tv/terms" target="_blank">二次創作ガイドライン - ホロライブ - VTuber事務所・配信サービス</a></div></div>
+          <div class="row"><div>使用したライブラリ→</div><div><a href="http://fabricjs.com/" target="_blank">Fabric.js</a></div></div>
+          <div class="row"><div>作者のツイッター→</div><div><a href="https://twitter.com/ruhiel_buin" target="_blank">@ruhiel_buin</a></div></div>
+          <div class="row"><div>お問い合わせ→</div><div><a href="https://github.com/ruhiel/ImageGenerator/issues" target="_blank">github.com</a></div></div>
+        </div>
+      <br/>
   </footer>
 </body>
 </html>

@@ -4,42 +4,70 @@ $(function(){
   var canvas = new fabric.Canvas('canvas');
   var $download = $('#download_button');
   var $text = $('#text');
-  var $fillColor=  $('#fill-color');
+  var $fillColor =  $('#fill-color');
   var $addTextButton = $('#text-add');
-  var $removeTextButton = $('#text-all-remove');
-  var textGroups = [];
+  var $removeTextButton = $('#text-remove');
+  var $removeAllTextButton = $('#text-all-remove');
   var $textVertical = $('#text-vertical');
   var $file = $('#file-selection');
-  var fontFamily = 'ＭＳ ゴシック';
-  var fontSize = 30;
+  var $fontFamily = $('#font-selection');
+  var $fontSize = $('#font-size');
+  var $reverse = $('#image-reverse');
+  var $addFukidashi = $('#add_fukidashi');
+  var $selectFukidashi = $('select[name=fukidashi]');
+  var $addOptionalImage = $('#add-optional-image');
   var fileInfoMap = {
     'DgXByGgVAAIzdkf.png':{
-      leftRate:0.1,
+      leftRate:0.05,
       topRate:0.4,
-      textVertical : false
+      textVertical : false,
+      fontSize:50
     },
     'Dl1uV-YUwAA5kOr.png':{
       leftRate:0.55,
-      topRate:0.65,
-      textVertical : false
+      topRate:0.60,
+      textVertical : false,
+      fontSize:90
     },
     'Dk4Po8eU0AIakS6.png':{
-      leftRate:0.14,
-      topRate:0.23,
-      textVertical : false
+      leftRate:0.16,
+      topRate:0.24,
+      textVertical : false,
+      fontSize:30
     },
     'DrzXCYhV4AAZXAa.png':{
       leftRate:0.1,
       topRate:0.2,
-      textVertical : true
+      textVertical : true,
+      fontSize:40
     }
   };
 
+  /**
+   * 追加ボタンクリックイベント
+   */
   $addTextButton.on('click', function(){
     addText(0, 0);
   });
 
+  /**
+   * 削除ボタンクリックイベント
+   */
   $removeTextButton.on('click', function(){
+   
+    var objects = canvas.getActiveObjects();
+    for(var i = 0; i < objects.length; i++) {
+        canvas.remove(objects[i]);
+      }
+    
+    canvas.renderAll();
+
+  });
+
+  /**
+   * 全削除クリックイベント
+   */
+  $removeAllTextButton.on('click', function(){
     removeAllText();
   });
 
@@ -50,6 +78,7 @@ $(function(){
     $text.val($('#file-selection option:selected').text());
     var map = fileInfoMap[$file.val()];
     $textVertical.prop('checked', map.textVertical);
+    $fontSize.val(map.fontSize);
     setImage($file.val());
   });
 
@@ -61,11 +90,9 @@ $(function(){
     saveCanvas('png', $file.val());
   });
 
-  /*
-  $text.on('change', function(){
-    canvas.renderAll();
-  });
-  */
+  /**
+   * 文字色取得
+   */
   var getFontColor = function() {
     return colorCodeToRGBString($fillColor.val());
   };
@@ -74,12 +101,49 @@ $(function(){
    * 文字色変更
    */
   $fillColor.on('change', function(){
-    for(var i = 0; i < textGroups.length; i++) {
-      var g = textGroups[i];
-      for(var j = 0; j < g.size(); j++) {
-        g.item(j).setColor(getFontColor());
+    var array = canvas.getActiveObjects();
+    for(var i = 0; i < array.length; i++){
+      if(array[i] instanceof fabric.Group) {
+        var g = array[i];
+        for(var j = 0; j < g.size(); j++) {
+          g.item(j).setColor(getFontColor());
+        }
       }
     }
+    canvas.renderAll();
+  });
+
+  /**
+   * 画像左右反転
+   */
+  $reverse.on('click', function(){
+    canvas.item(0).set({flipX:!canvas.item(0).get('flipX')});
+    canvas.renderAll();
+  });
+
+  /**
+   * 画像追加ボタン
+   */
+  $addOptionalImage.on('change', function(e){
+
+    var imageReader = new FileReader;
+    imageReader.onload = function(e){
+      var image = new Image;
+      image.onload = function(){
+        var fabricImage = new fabric.Image(image);
+        // Fabric.jsのImageオブジェクトを作成
+        fabricImage.set({
+          left: 0,
+          top: 0,
+          scaleX:  0.3,
+          scaleY:  0.3,
+        });
+        // 画像をcanvasに追加（描画）する
+        canvas.add(fabricImage);
+      };
+      image.src = e.target.result;
+    };
+    imageReader.readAsDataURL(e.target.files[0]);
     canvas.renderAll();
   });
 
@@ -92,12 +156,26 @@ $(function(){
   };
 
   /**
+   * セリフ枠追加
+   */
+  $addFukidashi.on('click', function(){
+    addImage($selectFukidashi.val(), {
+      scaleX : 0.3,
+      scaleY : 0.3
+    });
+  });
+
+  /**
    * フォント文字列取得
    */
   var getFontString = function() {
-    return fontSize + 'px ' + fontFamily; 
+    return $fontSize.val() + 'px ' + $('#font-selection option:selected').val(); 
   };
 
+  /**
+   * 文字列幅取得
+   * @param {*} text 文字列
+   */
   var getTextWidth = function(text) {
     var ctx = document.getElementById("canvas");
     var context = ctx.getContext("2d") ;
@@ -112,13 +190,22 @@ $(function(){
    * 文字全削除
    */
   var removeAllText = function() {
-    for(var i = 0; i < textGroups.length; i++) {
-      canvas.remove(textGroups[i]);
+    var array = canvas.getObjects();
+    for(var i = 0; i < array.length; i++){
+      if(array[i] instanceof fabric.Group) {
+        canvas.remove(array[i]);
+      }
     }
-
-    textGroups = [];
+    canvas.renderAll();
   };
 
+  /**
+   * 文字作成
+   * @param {*} text 文字
+   * @param {*} initPosX 初期位置X
+   * @param {*} initPosY 初期位置Y
+   * @param {*} isVertical 縦書きフラグ
+   */
   var createText = function(text, initPosX, initPosY, isVertical) {
     var posX = initPosX;
     var posY = initPosY;
@@ -129,10 +216,12 @@ $(function(){
       newText.set({
         left: posX,
         top: posY,
-        fontFamily : fontFamily,
-        fontSize : fontSize,
-        fill : getFontColor()
+        fontFamily : $('#font-selection option:selected').val(),
+        fontSize : $fontSize.val(),
+        fill : getFontColor(),
       });
+      
+
       textList.push(newText);
       if(isVertical) {
         // 縦書き
@@ -142,6 +231,13 @@ $(function(){
         posX += getTextWidth(array[i]);
       }
       
+      if(isVertical && array[i].match(/[\u30FC\u2010-\u2015\u2212\uFF70-]/)){
+        // 縦棒を縦書きにするための小細工
+        newText.set({
+          angle: 90,
+          left: posX + getTextWidth(array[i])
+        });
+      }
     }
 
     var group = new fabric.Group(textList, {
@@ -150,14 +246,29 @@ $(function(){
     });
 
     canvas.add(group);
-
-    textGroups.push(group);
   };
 
+  /**
+   * 文字列追加
+   * @param {*} x 
+   * @param {*} y 
+   */
   var addText = function(x, y) {
     createText($text.val(), x, y, $textVertical.prop('checked'));
   };
 
+  var addImage = function(file, opt) {
+    if(!file) { return; }
+
+    fabric.Image.fromURL('img/' + file, function(img) {
+      img.set(opt);
+      canvas.add(img);
+    });
+  };
+  /**
+   * 画像設定
+   * @param {*} file 
+   */
   var setImage = function(file){
     if(!file) { return; }
 
@@ -171,7 +282,7 @@ $(function(){
       img.set({
         selectable: false,
         scaleX : scaleX,
-        scaleY : scaleY
+        scaleY : scaleY,
       });
 
       canvas.setWidth(width);
@@ -188,7 +299,11 @@ $(function(){
     canvas.add(lgtmText);
   };
 
-  // canvas上のイメージを保存
+  /**
+   * canvas上のイメージを保存
+   * @param {*} saveType 
+   * @param {*} fileName 
+   */
   var saveCanvas = function(saveType, fileName){
     var imageType = "image/png";
     if(saveType === "jpeg"){
@@ -203,7 +318,10 @@ $(function(){
     saveBlob(blob, fileName);
   };
 
-  // Base64データをBlobデータに変換
+  /**
+   * Base64データをBlobデータに変換
+   * @param {*} base64 
+   */
   var Base64toBlob = function(base64){
     // カンマで分割して以下のようにデータを分ける
     // tmp[0] : データ形式（data:image/png;base64）
@@ -223,7 +341,11 @@ $(function(){
     return blob;
   };
 
-  // 画像のダウンロード
+  /**
+   * 画像のダウンロード
+   * @param {*} blob 
+   * @param {*} fileName 
+   */
   var saveBlob = function(blob, fileName){
     var url = (window.URL || window.webkitURL);
     // ダウンロード用のURL作成
@@ -241,12 +363,36 @@ $(function(){
     a.dispatchEvent(event);
   };
 
+  /**
+   * カラーコードRGB変換
+   * @param {*} value 
+   */
   var colorCodeToRGBString = function(value) {
     var r = parseInt(value.substr(1, 2), 16);
     var g = parseInt(value.substr(3, 2), 16);
     var b = parseInt(value.substr(5, 2), 16);
     return 'rgb(' + r + ',' + g + ',' + b + ')';
   };
-  
+
+  /**
+   * オブジェクト選択イベント
+   */
+  canvas.on('selection:created', function(options){
+    selectedObject = options.target;
+  });
+
+  /**
+   * オブジェクト選択解除イベント
+   */
+  canvas.on('selection:cleared', function(options){
+    selectedObject = null;
+  });
+
+  // 初期化
+  $file.val($file.children().first().attr('value'));
+  $text.val($file.children().first().text());
+  $textVertical.prop('checked', false);
+  $fontSize.val(fileInfoMap[$file.children().first().attr('value')].fontSize);
+  $('select[name=fukidashi]').ImageSelect({dropdownWidth:425});
   setImage($file.children().first().attr('value'));
 });

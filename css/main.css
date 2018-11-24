@@ -12,16 +12,53 @@ html, body{
     margin: 15px 0;
     padding: 0 15px;
   }
+
+  .text-area {
+    width : 300px;
+  }
   
   .canvas-wrapper {
     background-color: #fafafa;
     display: inline-block;
   }
-  
+  .input-number {
+    width: 50px;
+  }
   footer {
     margin: 45px 0 0 0;
     padding: 30px 0px 30px 15px;
     border-top: solid 1px #eaeaea;
     border-bottom: solid 1px #eaeaea;
     background-color: #fafafa;
+  }
+  .grid {
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: 2fr 1fr;
+  }
+  .main {
+    background: #fcc;
+  }
+  .side {
+    background: #fea;
+  }
+  .main,
+  .side {
+    padding: 2%;
+    border-radius: 10px
+  }
+  
+  .grid-table {
+    display: grid;
+    grid-template-columns: 200px 3fr;
+    grid-template-rows: repeat(auto-fill, auto);
+  }
+  .grid-table>.row{
+    display: contents;
+  }
+
+  @media(max-width: 400px){
+    .grid {
+      grid-template-columns: 1fr;
+    }
   }
