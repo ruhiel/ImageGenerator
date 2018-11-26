@@ -18,29 +18,40 @@ $(function(){
   var $addOptionalImage = $('#add-optional-image');
   var $selectable = $('#selectable');
   var fileInfoMap = {
-    'DgXByGgVAAIzdkf.png':{
+    '狐じゃい.png':{
       leftRate:0.05,
       topRate:0.4,
       textVertical : false,
-      fontSize:50
+      fontSize:50,
+      text:'狐じゃい'
     },
-    'Dl1uV-YUwAA5kOr.png':{
+    'ヨシ.png':{
       leftRate:0.55,
       topRate:0.60,
       textVertical : false,
-      fontSize:90
+      fontSize:90,
+      text:'ヨシ'
     },
-    'Dk4Po8eU0AIakS6.png':{
+    '茶葉.png':{
       leftRate:0.16,
       topRate:0.24,
       textVertical : false,
-      fontSize:30
+      fontSize:30,
+      text:'茶葉'
     },
-    'DrzXCYhV4AAZXAa.png':{
+    '素人は黙っとれ.png':{
       leftRate:0.1,
       topRate:0.2,
       textVertical : true,
-      fontSize:40
+      fontSize:40,
+      text:'素人は黙っとれ――'
+    },
+    '食いたい.png':{
+      leftRate:0.0,
+      topRate:0.0,
+      textVertical : true,
+      fontSize:30,
+      text:''
     }
   };
 
@@ -76,8 +87,8 @@ $(function(){
    * 画像選択
    */
   $file.on('change', function(e){
-    $text.val($('#file-selection option:selected').text());
     var map = fileInfoMap[$file.val()];
+    $text.val(map.text);
     $textVertical.prop('checked', map.textVertical);
     $fontSize.val(map.fontSize);
     setImage($file.val());
@@ -263,7 +274,9 @@ $(function(){
    * @param {*} y 
    */
   var addText = function(x, y) {
-    createText($text.val(), x, y, $textVertical.prop('checked'));
+    if($text.val().length > 0) {
+      createText($text.val(), x, y, $textVertical.prop('checked'));
+    }
   };
 
   var addImage = function(file, opt) {
@@ -280,7 +293,6 @@ $(function(){
    */
   var setImage = function(file){
     if(!file) { return; }
-
     fabric.Image.fromURL('img/' + file, function(img) {
       var aspect = img.width / img.height;
 
@@ -401,10 +413,11 @@ $(function(){
   });
 
   // 初期化
-  $file.val($file.children().first().attr('value'));
-  $text.val($file.children().first().text());
+  var filename = $file.children().first().attr('value');
+  $file.val(filename);
+  $text.val(fileInfoMap[filename].text);
   $textVertical.prop('checked', false);
-  $fontSize.val(fileInfoMap[$file.children().first().attr('value')].fontSize);
+  $fontSize.val(fileInfoMap[filename].fontSize);
   $('select[name=fukidashi]').ImageSelect({dropdownWidth:425});
-  setImage($file.children().first().attr('value'));
+  setImage(filename);
 });
