@@ -220,6 +220,17 @@ $(function(){
   };
 
   /**
+   * 全角化
+   * @param {*} value 文字 
+   */
+  var toFullWidth = function(value) {
+    if (!value) return value;
+    return String(value).replace(/[!-~]/g, function(all) {
+        return String.fromCharCode(all.charCodeAt(0) + 0xFEE0);
+    });
+  };
+  
+  /**
    * 文字作成
    * @param {*} text 文字
    * @param {*} initPosX 初期位置X
@@ -232,17 +243,14 @@ $(function(){
     var textList = [];
     var array = text.split("");
     for (var i = 0; i < array.length; i++) {
+      if(array[i].match(/[a-zA-Z0-9!-/:-@¥[-`{-~]/)) {
+        array[i] = toFullWidth(array[i]);
+      }
+
       var newText = new fabric.Text(array[i]);
-      newText.set({
-        left: posX,
-        top: posY,
-        fontFamily : $('#font-selection option:selected').val(),
-        fontSize : $fontSize.val(),
-        fill : getFontColor(),
-      });
-      
 
       textList.push(newText);
+
       if(isVertical) {
         // 縦書き
         posY += getTextWidth(array[i]);
@@ -250,13 +258,42 @@ $(function(){
         // 横書き
         posX += getTextWidth(array[i]);
       }
-      
-      if(isVertical && array[i].match(/[\u30FC\u2010-\u2015\u2212\uFF70-]/)){
-        // 縦棒を縦書きにするための小細工
-        newText.set({
-          angle: 90,
-          left: posX + getTextWidth(array[i])
-        });
+
+      newText.set({
+        left: posX,
+        top: posY,
+        fontFamily : $('#font-selection option:selected').val(),
+        fontSize : $fontSize.val(),
+        fill : getFontColor(),
+      });
+
+      if(isVertical) {
+        if(array[i].match(/[\uff08\uff09\uff5f\uff60\u300c\u300d\u300e\u300f\uFE43\uFE44\u005B\u005D\uFF3B\uFF3D\u301A\u301B\u27E6\u27E7\u007B\u007D\uFF5B\uFF5D\u3014\u3015\u2772\u2773\u3018\u3019\u27EC\u27ED\u3008\u3009\u300A\u300B\u27EA\u27EB\u00AB\u00BB\u2039\u203A\u003C\u003E\uFF1C\uFF1E\u226A\u226B\u3010\u3011\u3016\u3017]/)){
+          // 括弧を縦書きにするための小細工
+          newText.set({
+            angle: 90,
+            left : posX + getTextWidth("あ"),
+          });
+        } else if(array[i].match(/[\u3002\uff61\ufe12]/)){
+          // 句点を縦書きにするための小細工
+          newText.set({
+            angle: -90,
+            top: posY + $fontSize.val() / 2,
+          });
+        } else if(array[i].match(/[\u3001\uff64\u002e\uff0e]/)){
+          // 読点を縦書きにするための小細工
+          newText.set({
+            angle: -180,
+            left : posX + getTextWidth(array[i]),
+            top : posY + getTextWidth(array[i])
+          });
+        } else if(array[i].match(/[\u30FC\u2010-\u2015\u2212\uFF70-]/)){
+          // 縦棒を縦書きにするための小細工
+          newText.set({
+            angle: 90,
+            left: posX + getTextWidth(array[i])
+          });
+        }
       }
     }
 
