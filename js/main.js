@@ -287,7 +287,7 @@ $(function(){
             left : posX + getTextWidth(array[i]),
             top : posY + getTextWidth(array[i])
           });
-        } else if(array[i].match(/[\u30FC\u2010-\u2015\u2212\uFF70-]/)){
+        } else if(array[i].match(/[\uFF5E\u02DC\u007E\u2026\u301C\u30FC\u2010-\u2015\u2212\uFF70-]/)){
           // 縦棒を縦書きにするための小細工
           newText.set({
             angle: 90,
