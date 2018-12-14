@@ -17,6 +17,10 @@ $(function(){
   var $selectFukidashi = $('select[name=fukidashi]');
   var $addOptionalImage = $('#add-optional-image');
   var $selectable = $('#selectable');
+  var _clipboard = null;
+  var $copyButton = $('#copy-button');
+  var $pasteButton = $('#paste-button');
+
   var fileInfoMap = {
     '狐じゃい.png':{
       leftRate:0.05,
@@ -55,6 +59,7 @@ $(function(){
     }
   };
 
+
   /**
    * 追加ボタンクリックイベント
    */
@@ -65,16 +70,7 @@ $(function(){
   /**
    * 削除ボタンクリックイベント
    */
-  $removeTextButton.on('click', function(){
-   
-    var objects = canvas.getActiveObjects();
-    for(var i = 0; i < objects.length; i++) {
-        canvas.remove(objects[i]);
-      }
-    
-    canvas.renderAll();
-
-  });
+  $removeTextButton.on('click', deletefunction);
 
   /**
    * 全削除クリックイベント
@@ -102,6 +98,18 @@ $(function(){
     saveCanvas('png', $file.val());
   });
 
+  /**
+   * 削除処理
+   */
+  var deletefunction = function(){
+   
+    var objects = canvas.getActiveObjects();
+    for(var i = 0; i < objects.length; i++) {
+        canvas.remove(objects[i]);
+      }
+    
+    canvas.renderAll();
+  };
   /**
    * 文字色取得
    */
@@ -183,6 +191,20 @@ $(function(){
       scaleX : 0.3,
       scaleY : 0.3
     });
+  });
+
+  /**
+   * コピー
+   */
+  $copyButton.on('click', function(){
+    copy();
+  });
+
+  /**
+   * 貼り付け
+   */
+  $pasteButton.on('click', function(){
+    paste();
   });
 
   /**
@@ -436,17 +458,61 @@ $(function(){
   };
 
   /**
-   * オブジェクト選択イベント
+   * コピー処理
    */
-  canvas.on('selection:created', function(options){
-    selectedObject = options.target;
-  });
+  var copy = function() {
+    canvas.getActiveObject().clone(function(cloned) {
+      _clipboard = cloned;
+    });
+  };
 
   /**
-   * オブジェクト選択解除イベント
+   * 貼り付け処理
    */
-  canvas.on('selection:cleared', function(options){
-    selectedObject = null;
+  var paste = function() {
+    _clipboard.clone(function(clonedObj) {
+      canvas.discardActiveObject();
+      clonedObj.set({
+        left: clonedObj.left + 10,
+        top: clonedObj.top + 10,
+        evented: true,
+      });
+      if (clonedObj.type === 'activeSelection') {
+        // active selection needs a reference to the canvas.
+        clonedObj.canvas = canvas;
+        clonedObj.forEachObject(function(obj) {
+          canvas.add(obj);
+        });
+        // this should solve the unselectability
+        clonedObj.setCoords();
+      } else {
+        canvas.add(clonedObj);
+      }
+      _clipboard.top += 10;
+      _clipboard.left += 10;
+      canvas.setActiveObject(clonedObj);
+      canvas.requestRenderAll();
+    });
+  };
+
+  $(window).keydown(function(e){
+    if(e.ctrlKey){
+      if(e.keyCode === 67){
+        // Ctrl + c
+        copy();
+        return false;
+      } else if(e.keyCode === 86){
+        // Ctrl + v
+        paste();
+        return false;
+      }
+    } else {
+      if(e.keyCode == 46) {
+        // Delete
+        deletefunction();
+        return false;
+      }
+    }
   });
 
   // 初期化
