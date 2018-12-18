@@ -72,7 +72,9 @@ $(function(){
   /**
    * 削除ボタンクリックイベント
    */
-  $removeTextButton.on('click', deletefunction);
+  $removeTextButton.on('click', function(){
+    deletefunction();
+  });
 
   /**
    * 全削除クリックイベント
