@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <title>白上式画像ジェネレーター</title>
-
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
   <script src="./js/fabric.min.js"></script>
   <script src="./js/imageselect.js"></script>
@@ -33,10 +32,15 @@
                   <option value="ヨシ.png">ヨシ</option>
                   <option value="素人は黙っとれ.png">素人は黙っとれ</option>
                   <option value="食いたい.png">食いたい</option>
+                  <option value="無題.png">無題</option>
               </select>
           </div>
           <div class="section">
-              テキスト：<input type="text" id="text" class="text-area" value="">
+            幅　：<input class="input-number" type="number" id="width" value="0"/><br/>
+            高さ：<input class="input-number" type="number" id="height" value="0"/>
+          </div>
+          <div class="section">
+            テキスト：<input type="text" id="text" class="text-area" value="">
           </div>
           <div class="section">
             <button id="text-add">追加</button>
