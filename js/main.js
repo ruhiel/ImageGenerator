@@ -20,6 +20,8 @@ $(function(){
   var _clipboard = null;
   var $copyButton = $('#copy-button');
   var $pasteButton = $('#paste-button');
+  var $widthNumber = $('#width');
+  var $heightNumber = $('#height');
 
   var fileInfoMap = {
     '狐じゃい.png':{
@@ -83,11 +85,17 @@ $(function(){
    * 画像選択
    */
   $file.on('change', function(e){
-    var map = fileInfoMap[$file.val()];
-    $text.val(map.text);
-    $textVertical.prop('checked', map.textVertical);
-    $fontSize.val(map.fontSize);
-    setImage($file.val());
+    if(fileInfoMap[$file.val()]) {
+      var map = fileInfoMap[$file.val()];
+      $text.val(map.text);
+      $textVertical.prop('checked', map.textVertical);
+      $fontSize.val(map.fontSize);
+      setImage($file.val());
+
+    } else {
+      $text.val("");
+      canvas.clear();
+    }
   });
 
   /**
@@ -205,6 +213,20 @@ $(function(){
    */
   $pasteButton.on('click', function(){
     paste();
+  });
+
+  /**
+   * 幅変更
+   */
+  $widthNumber.on('change', function(){
+    canvas.setWidth($widthNumber.val());
+  });
+
+  /**
+   * 幅変更
+   */
+  $heightNumber.on('change', function(){
+    canvas.setHeight($heightNumber.val());
   });
 
   /**
@@ -366,7 +388,8 @@ $(function(){
       });
       canvas.setWidth(width);
       canvas.setHeight(height);
-
+      $widthNumber.val(width);
+      $heightNumber.val(height);
       canvas.clear()
       canvas.add(img);
       img.on('moving', function(){
