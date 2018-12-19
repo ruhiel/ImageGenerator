@@ -29,20 +29,23 @@ $(function(){
       topRate:0.4,
       textVertical : false,
       fontSize:50,
+      angle:0,
       text:'狐じゃい'
     },
     'ヨシ.png':{
-      leftRate:0.55,
-      topRate:0.60,
+      leftRate:0.15,
+      topRate:0.25,
       textVertical : false,
-      fontSize:90,
+      fontSize:30,
+      angle:0,
       text:'ヨシ'
     },
     '茶葉.png':{
-      leftRate:0.16,
-      topRate:0.24,
+      leftRate:0.55,
+      topRate:0.6,
       textVertical : false,
-      fontSize:30,
+      fontSize:90,
+      angle:-5,
       text:'茶葉'
     },
     '素人は黙っとれ.png':{
@@ -50,13 +53,39 @@ $(function(){
       topRate:0.2,
       textVertical : true,
       fontSize:40,
+      angle:0,
       text:'素人は黙っとれ――'
+    },
+    '収益化_あやめちゃん.png':{
+      leftRate:0.13,
+      topRate:0.25,
+      textVertical : false,
+      fontSize:80,
+      angle:-20,
+      text:'収益化'
+    },
+    '収益化_ちょこ先生.png':{
+      leftRate:0.29,
+      topRate:0.2,
+      textVertical : false,
+      fontSize:80,
+      angle:8,
+      text:'収益化'
+    },
+    '収益化_スバルちゃん.png':{
+      leftRate:0.5,
+      topRate:0.15,
+      textVertical : false,
+      fontSize:80,
+      angle:20,
+      text:'収益化'
     },
     '食いたい.png':{
       leftRate:0.0,
       topRate:0.0,
       textVertical : true,
       fontSize:30,
+      angle:0,
       text:''
     }
   };
@@ -225,7 +254,7 @@ $(function(){
   });
 
   /**
-   * 幅変更
+   * 高さ変更
    */
   $heightNumber.on('change', function(){
     canvas.setHeight($heightNumber.val());
@@ -349,6 +378,8 @@ $(function(){
     });
 
     canvas.add(group);
+
+    return group;
   };
 
   /**
@@ -358,7 +389,7 @@ $(function(){
    */
   var addText = function(x, y) {
     if($text.val().length > 0) {
-      createText($text.val(), x, y, $textVertical.prop('checked'));
+      return createText($text.val(), x, y, $textVertical.prop('checked'));
     }
   };
 
@@ -388,10 +419,10 @@ $(function(){
         scaleX : scaleX,
         scaleY : scaleY,
       });
-      canvas.setWidth(width);
-      canvas.setHeight(height);
-      $widthNumber.val(width);
-      $heightNumber.val(height);
+      canvas.setWidth(Math.floor(width));
+      canvas.setHeight(Math.floor(height));
+      $widthNumber.val(Math.floor(width));
+      $heightNumber.val(Math.floor(height));
       canvas.clear()
       canvas.add(img);
       img.on('moving', function(){
@@ -400,8 +431,10 @@ $(function(){
       img.on('moved', function(){
         img.set({opacity:1.0});
       });
-      var pos = fileInfoMap[file];
-      addText(width * pos.leftRate, height * pos.topRate);
+      var map = fileInfoMap[file];
+      var group = addText(width * map.leftRate, height * map.topRate);
+
+      group.angle = map.angle;
     });
   };
 
