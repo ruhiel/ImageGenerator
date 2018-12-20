@@ -22,6 +22,7 @@ $(function(){
   var $pasteButton = $('#paste-button');
   var $widthNumber = $('#width');
   var $heightNumber = $('#height');
+  var $frontButton = $('#front-button');
 
   var fileInfoMap = {
     '狐じゃい.png':{
@@ -145,7 +146,7 @@ $(function(){
     var objects = canvas.getActiveObjects();
     for(var i = 0; i < objects.length; i++) {
         canvas.remove(objects[i]);
-      }
+    }
     
     canvas.renderAll();
   };
@@ -192,7 +193,6 @@ $(function(){
    * 画像追加ボタン
    */
   $addOptionalImage.on('change', function(e){
-
     var imageReader = new FileReader;
     imageReader.onload = function(e){
       var image = new Image;
@@ -233,31 +233,38 @@ $(function(){
   });
 
   /**
-   * コピー
+   * コピーボタン
    */
   $copyButton.on('click', function(){
     copy();
   });
 
   /**
-   * 貼り付け
+   * 貼り付けボタン
    */
   $pasteButton.on('click', function(){
     paste();
   });
 
   /**
-   * 幅変更
+   * 幅変更ボタン
    */
   $widthNumber.on('change', function(){
     canvas.setWidth($widthNumber.val());
   });
 
   /**
-   * 高さ変更
+   * 高さ変更ボタン
    */
   $heightNumber.on('change', function(){
     canvas.setHeight($heightNumber.val());
+  });
+
+  /**
+   * 最前面へ移動ボタン
+   */
+  $frontButton.on('click', function(){
+    toFront();
   });
 
   /**
@@ -393,6 +400,11 @@ $(function(){
     }
   };
 
+  /**
+   * 画像追加
+   * @param {*} file ファイル
+   * @param {*} opt オプション
+   */
   var addImage = function(file, opt) {
     if(!file) { return; }
 
@@ -553,6 +565,19 @@ $(function(){
     });
   };
 
+  /**
+   * 最前面へ移動
+   */
+  var toFront = function () {
+    var objects = canvas.getActiveObjects();
+    for(var i = 0; i < objects.length; i++) {
+      objects[i].bringToFront();
+    }
+  };
+
+  /**
+   * キー押下
+   */
   $(window).keydown(function(e){
     if(e.ctrlKey){
       if(e.keyCode === 67){
@@ -568,6 +593,10 @@ $(function(){
       if(e.keyCode == 46) {
         // Delete
         deletefunction();
+        return false;
+      } else if(e.keyCode === 70){
+        // f
+        toFront();
         return false;
       }
     }
