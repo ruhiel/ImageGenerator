@@ -16,13 +16,13 @@ $(function(){
   var $addFukidashi = $('#add_fukidashi');
   var $selectFukidashi = $('select[name=fukidashi]');
   var $addOptionalImage = $('#add-optional-image');
-  var $selectable = $('#selectable');
   var _clipboard = null;
   var $copyButton = $('#copy-button');
   var $pasteButton = $('#paste-button');
   var $widthNumber = $('#width');
   var $heightNumber = $('#height');
   var $frontButton = $('#front-button');
+  var $backButton = $('#back-button');
 
   var fileInfoMap = {
     '狐じゃい.png':{
@@ -182,14 +182,6 @@ $(function(){
   });
 
   /**
-   * ベース画像非選択化
-   */
-  $selectable.on('change', function(){
-    canvas.item(0).set('selectable',!$selectable.prop('checked'));
-    canvas.renderAll();
-  });
-
-  /**
    * 画像追加ボタン
    */
   $addOptionalImage.on('change', function(e){
@@ -265,6 +257,13 @@ $(function(){
    */
   $frontButton.on('click', function(){
     toFront();
+  });
+
+  /**
+   * 最背面へ移動ボタン
+   */
+  $backButton.on('click', function(){
+    toBack();
   });
 
   /**
@@ -411,6 +410,12 @@ $(function(){
     fabric.Image.fromURL('img/' + file, function(img) {
       img.set(opt);
       canvas.add(img);
+      img.on('moving', function(){
+        img.set({opacity:0.5});
+      });
+      img.on('moved', function(){
+        img.set({opacity:1.0});
+      });
     });
   };
   /**
@@ -427,7 +432,6 @@ $(function(){
       var scaleX = width / img.width;
       var scaleY = height / img.height;
       img.set({
-        selectable : !$selectable.prop('checked'),
         scaleX : scaleX,
         scaleY : scaleY,
       });
@@ -436,13 +440,7 @@ $(function(){
       $widthNumber.val(Math.floor(width));
       $heightNumber.val(Math.floor(height));
       canvas.clear()
-      canvas.add(img);
-      img.on('moving', function(){
-        img.set({opacity:0.5});
-      });
-      img.on('moved', function(){
-        img.set({opacity:1.0});
-      });
+      canvas.backgroundImage = img;
       var map = fileInfoMap[file];
       var group = addText(width * map.leftRate, height * map.topRate);
 
@@ -573,6 +571,18 @@ $(function(){
     for(var i = 0; i < objects.length; i++) {
       objects[i].bringToFront();
     }
+    canvas.requestRenderAll();
+  };
+
+  /**
+   * 最背面へ移動
+   */
+  var toBack = function () {
+    var objects = canvas.getActiveObjects();
+    for(var i = 0; i < objects.length; i++) {
+      objects[i].sendToBack();
+    }
+    canvas.requestRenderAll();
   };
 
   /**
@@ -597,6 +607,10 @@ $(function(){
       } else if(e.keyCode === 70){
         // f
         toFront();
+        return false;
+      } else if(e.keyCode === 66){
+        // f
+        toBack();
         return false;
       }
     }
