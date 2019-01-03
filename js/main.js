@@ -57,6 +57,14 @@ $(function(){
       angle:0,
       text:'素人は黙っとれ――'
     },
+    'フロムで魂全部溶かす狐の顔.png':{
+      leftRate:0.1,
+      topRate:0.2,
+      textVertical : true,
+      fontSize:40,
+      angle:0,
+      text:''
+    },
     'プラカード_あやめちゃん.png':{
       leftRate:0.13,
       topRate:0.25,
