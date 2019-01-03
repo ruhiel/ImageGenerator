@@ -57,29 +57,29 @@ $(function(){
       angle:0,
       text:'素人は黙っとれ――'
     },
-    '収益化_あやめちゃん.png':{
+    'プラカード_あやめちゃん.png':{
       leftRate:0.13,
       topRate:0.25,
       textVertical : false,
       fontSize:80,
       angle:-20,
-      text:'収益化'
+      text:''
     },
-    '収益化_ちょこ先生.png':{
+    'プラカード_ちょこ先生.png':{
       leftRate:0.29,
       topRate:0.2,
       textVertical : false,
       fontSize:80,
       angle:8,
-      text:'収益化'
+      text:''
     },
-    '収益化_スバルちゃん.png':{
+    'プラカード_スバルちゃん.png':{
       leftRate:0.5,
       topRate:0.15,
       textVertical : false,
       fontSize:80,
       angle:20,
-      text:'収益化'
+      text:''
     },
     '食いたい.png':{
       leftRate:0.0,
