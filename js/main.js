@@ -96,6 +96,14 @@ $(function(){
       fontSize:30,
       angle:0,
       text:''
+    },
+    'オゥライ.png':{
+      leftRate:0.15,
+      topRate:0.8,
+      textVertical : false,
+      fontSize:90,
+      angle:0,
+      text:'オゥライ！'
     }
   };
 
