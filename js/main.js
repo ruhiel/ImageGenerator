@@ -104,6 +104,14 @@ $(function(){
       fontSize:90,
       angle:0,
       text:'オゥライ！'
+    },
+    '絵馬.png':{
+      leftRate:0.15,
+      topRate:0.8,
+      textVertical : false,
+      fontSize:60,
+      angle:0,
+      text:''
     }
   };
 
