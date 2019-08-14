@@ -112,6 +112,15 @@ $(function(){
       fontSize:60,
       angle:0,
       text:''
+    },
+    'マリン船長.png':{
+      leftRate:0.15,
+      topRate:0.8,
+      textVertical : false,
+      fontSize:60,
+      angle:0,
+      text:'',
+      canvasWidth:900,
     }
   };
 
@@ -459,13 +468,20 @@ $(function(){
         scaleX : scaleX,
         scaleY : scaleY,
       });
-      canvas.setWidth(Math.floor(width));
+      
+      var map = fileInfoMap[file];
+      if(map.canvasWidth) {
+        canvas.setWidth(map.canvasWidth);
+        $widthNumber.val(map.canvasWidth);
+      } else {
+        canvas.setWidth(Math.floor(width));
+        $widthNumber.val(Math.floor(width));
+      }
       canvas.setHeight(Math.floor(height));
-      $widthNumber.val(Math.floor(width));
       $heightNumber.val(Math.floor(height));
       canvas.clear()
       canvas.backgroundImage = img;
-      var map = fileInfoMap[file];
+      
       var group = addText(width * map.leftRate, height * map.topRate);
 
       group.angle = map.angle;
